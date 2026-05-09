@@ -62,10 +62,27 @@ public class NotesController : ControllerBase
         note.Text = updated.Text;
         note.Tags = updated.Tags;
         note.UpdatedAt = DateTime.Now;
+        note.Favorite = updated.Favorite;
 
         col.Update(note);
 
         return Ok(note);
     }
+
+    [HttpPatch("{id}/favorite")]
+public IActionResult ToggleFavorite(int id)
+{
+    using var db = GetDb();
+    var col = db.GetCollection<Note>("notes");
+
+    var note = col.FindById(id);
+    if (note == null) return NotFound();
+
+    note.Favorite = !note.Favorite;
+
+    col.Update(note);
+
+    return Ok(note);
+}
 
 }
