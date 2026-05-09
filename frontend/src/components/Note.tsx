@@ -8,6 +8,8 @@ type NoteProps = {
   image?: string;
   onDelete: (id: number) => void;
   onEdit: (id: number) => void;
+  favorite: boolean;
+  onFavorite: (id: number) => void;
 };
 
 const formatDate = (date: string) => {
@@ -30,9 +32,17 @@ export default function Note({
   image,
   onDelete,
   onEdit,
+  favorite,
+  onFavorite,
 }: NoteProps) {
   return (
     <div className="note">
+      <button
+        className={`favoriteButton ${favorite ? "active" : ""}`}
+        onClick={() => onFavorite(id)}
+      >
+        ♥
+      </button>
       <div className="noteHeader">
         <h2>{title}</h2>
       </div>

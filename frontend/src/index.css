@@ -151,9 +151,6 @@ body {
   border-radius: 8px;
   cursor: pointer;
 
-  display: block;
-  margin: 0 auto 20px auto;
-
   font-weight: 500;
   transition: 0.2s ease;
 }
@@ -172,6 +169,8 @@ body {
   align-items: center;
 
   backdrop-filter: blur(2px);
+
+  z-index: 10;
 }
 
 .addModal {
@@ -209,4 +208,94 @@ body {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
+}
+
+.searchBar {
+  display: block;
+  margin: 0 auto 20px auto;
+
+  width: 320px;
+  padding: 12px 14px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: white;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  font-size: 14px;
+  outline: none;
+
+  transition: 0.2s ease;
+}
+
+.searchBar:focus {
+  box-shadow:
+    0 0 0 2px #2f5bd3,
+    0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.searchBar {
+  display: block;
+  margin: 0 auto 20px auto;
+
+  width: 320px;
+  padding: 12px 14px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: white;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  font-size: 14px;
+  outline: none;
+
+  transition: 0.2s ease;
+}
+
+.searchBar:focus {
+  box-shadow:
+    0 0 0 2px #2f5bd3,
+    0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.note {
+  position: relative;
+}
+
+.favoriteButton {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  border: none;
+  background: transparent;
+
+  font-size: 22px;
+  cursor: pointer;
+
+  color: #bbb;
+
+  transition: 0.2s ease;
+}
+
+.favoriteButton.active {
+  color: #ff4d6d;
+}
+
+.favoriteButton:hover {
+  transform: scale(1.1);
+}
+
+.topButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.favoriteFilterActive {
+  background: #ff4d6d;
 }

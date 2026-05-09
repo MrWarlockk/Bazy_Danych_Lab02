@@ -13,6 +13,23 @@ function App() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editText, setEditText] = useState("");
   const [editingNote, setEditingNote] = useState<any>(null);
+  const [searchTag, setSearchTag] = useState("");
+  const [showFavorites, setShowFavorites] = useState(false);
+
+  const filteredNotes = notes.filter((note) => {
+    const matchesSearch =
+      searchTag.trim() === "" ||
+      (Array.isArray(note.tags) &&
+        note.tags.some(
+          (tag: any) =>
+            typeof tag === "string" &&
+            tag.toLowerCase().includes(searchTag.toLowerCase()),
+        ));
+
+    const matchesFavorite = !showFavorites || note.favorite === true;
+
+    return matchesSearch && matchesFavorite;
+  });
 
   const addNote = () => {
     fetch("http://localhost:5095/api/notes", {
@@ -23,9 +40,13 @@ function App() {
       body: JSON.stringify({
         title: newNote.title,
         text: newNote.text,
-        tags: newNote.tags.split(",").map((t) => t.trim()),
+        tags: newNote.tags
+          .split(",")
+          .map((t) => t.trim())
+          .filter((t) => t !== ""),
         createdAt: new Date(),
         updatedAt: new Date(),
+        favorite: false,
       }),
     }).then(() => {
       setIsAdding(false);
@@ -71,6 +92,11 @@ function App() {
     setNewNote({ title: "", text: "", tags: "" });
   };
 
+  const toggleFavorite = (id: number) => {
+    fetch(`http://localhost:5095/api/notes/${id}/favorite`, {
+      method: "PATCH",
+    }).then(() => fetchNotes());
+  };
   useEffect(() => {
     fetchNotes();
   }, []);
@@ -92,9 +118,26 @@ function App() {
         <h1>Notatnik</h1>
       </div>
 
-      <button className="addButton" onClick={() => setIsAdding(!isAdding)}>
-        {"Dodaj Notatkę"}
-      </button>
+      <input
+        className="searchBar"
+        type="text"
+        placeholder="Szukaj po tagach..."
+        value={searchTag}
+        onChange={(e) => setSearchTag(e.target.value)}
+      />
+
+      <div className="topButtons">
+        <button className="addButton" onClick={() => setIsAdding(!isAdding)}>
+          {"Dodaj notatkę"}
+        </button>
+
+        <button
+          className={`addButton ${showFavorites ? "favoriteFilterActive" : ""}`}
+          onClick={() => setShowFavorites(!showFavorites)}
+        >
+          ♥ Ulubione
+        </button>
+      </div>
 
       {isAdding && (
         <div className="addOverlay">
@@ -146,7 +189,7 @@ function App() {
       )}
 
       <div className="notesContainer">
-        {notes.map((note) => (
+        {filteredNotes.map((note) => (
           <Note
             key={note.id}
             id={note.id}
@@ -161,6 +204,8 @@ function App() {
               setEditingNote(note);
               setEditText(note.text);
             }}
+            favorite={note.favorite}
+            onFavorite={toggleFavorite}
           />
         ))}
       </div>
